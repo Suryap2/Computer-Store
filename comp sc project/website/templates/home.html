@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block title %}QuantumBytes{% endblock %} 
+
+
+{% block content %}
+<div class="outer-container" style="display: flex;flex-direction: row;width: 100%;height: 100%;">
+    <div class="left-container" style="width: 50%;height: 100%;display: flex;flex-direction: column;justify-content: flex-start; margin-left: 10%;margin-top: 10%;">
+        <div style="font-weight: 900;font-size: 90px;color: #ffb703;line-height: 90%;">
+            Quantum Bytes
+        </div>
+        <br>
+        <br>
+        <div style="background-color: black;border-radius: 10px;color: white;font-size: large;font-weight: bold;width: max-content; padding: 10px 15px;max-width: 500px;">
+            Your Modern Tech Partner: Reliable, Professional, Efficient
+        </div>
+        <br>
+        <div>
+            {% if 'user' not in session %}<a class="btn btn-dark" href="/login">Login</a>{% endif %}
+            {% if 'user' in session %}<a class="btn btn-info" disabled style="color: white;">Hello {{ session['user']['firstName'] }} !</a>{% endif %}
+            <a class="btn" style="background-color: #ffb703;color: #000;"href="/products">Browse Products</a>
+        </div>
+
+    </div>
+    <div class="right-container" style="width:50%;height: 100%;display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+        <img src="../static/Images/home_screen_image.png" width="700px" height="700px">
+    </div>
+
+</div>
+{% endblock %}

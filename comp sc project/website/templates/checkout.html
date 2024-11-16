@@ -1,0 +1,158 @@
+{% extends "base.html" %} {% block title %}Checkout{% endblock %} {% block
+    content %}
+    <div style="width: 100%;height: 100%; margin: 20px 20px">
+      <div class="products-title">Cart</div>
+      <hr style="width: 100%; height: 1px;"/>
+      <div class="cart-body" style="width: 100%;height: 100%;display: flex;flex-direction: row;">
+        <div class="left-container" style="width:50%;height: 100%;">
+
+          {% if cart_products %}
+            {% for prod in cart_products %}
+              <div class="card mb-3" style="max-width: 90%;">
+                <div class="row no-gutters">
+                  <div class="col-md-4">
+                    <img src="data:image/png;base64,{{ prod[3] }}" class="card-img" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{prod[0]}}</h5>
+                      <p class="card-text"> {{prod[4]}}</p>
+                      <h5 class="card-title" style="color: #ffb703;">Qtn : {{prod[2]}}</h5>
+                      <h5 class="card-title" style="color: darkcyan;">Price : ₹ {{prod[1]}}</h5>
+                      <form action="{{ url_for('checkout.remove_from_cart') }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="product_name" value="{{ prod[0] }}">
+                        <button type="submit" class="btn btn-danger"><i style="margin-right: 5px;" class="bi bi-trash3"></i>Delete</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% if not cart_products %}
+          <div style="font-size: larger;">No products in Cart !</div>
+          {%  endif %}
+
+        </div>
+
+        <div class="right-container" style="width:47%;height: 100%;padding: 0 20px;">
+          <form method="POST" action="{{ url_for('checkout.show_checkout') }}" style="width: 100%;height: 100%; margin: 20px 20px">
+          <div class="products-title">Checkout</div>
+          <div class="Address">
+            <label for="address" style="font-size: larger;">Address*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              name="address"
+              placeholder="Enter address"
+            />
+          </div>
+
+          <div class="PaymentMethod" style="margin: 10px 0;">
+            <label for="paymentMethod" style="font-size: larger;">Payment Method*</label>
+            <div >
+              <select id="paymentMethod" name="paymentMethod" class="form-control" onchange="togglePaymentFields()">
+                <option value="">Select Payment Method</option>
+                <option value="card">Credit or Debit Card</option>
+                <option value="upi">UPI</option>
+                <option value="cod">Cash On Delivery</option>
+              </select>
+      
+              <!-- Card input -->
+              <div id="cardDetails" style="display: none; margin-top: 10px;">
+                <label for="Card" style="font-size:medium;">Card Number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Card"
+                  name="Card"
+                  placeholder="Enter Card Number"
+                  style="max-width: 200px;"
+                />
+                <div class="cvv">
+                  <label for="cvv" style="font-size:medium; margin-top: 5px;">CVV</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="CVV"
+                    name="CVV"
+                    placeholder="Enter CVV"
+                    style="max-width: 200px;"
+                  />
+                </div>
+              </div>
+      
+              <!-- UPI input -->
+              <div id="upiDetails" style="display: none; margin-top: 10px;">
+                <label for="UPI" style="font-size:medium;">UPI ID</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="UPI"
+                  name="UPI"
+                  placeholder="Enter UPI ID"
+                  style="max-width: 200px;"
+                />
+              </div>
+                  
+                  <div class="products-title">Details</div>
+                  <hr>
+
+                      <table class="table table-striped" border="1">
+                          <thead class="thead-dark">
+                              <tr>
+                                  <th>Product Name</th>
+                                  <th>Quantity</th>
+                                  <th>Price</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for product in cart_products %}
+                              <tr>
+                                  <td>{{ product[0] }}</td> <!-- Product Name -->
+                                  <td>{{ product[2] }}</td> <!-- Quantity (tno) -->
+                                  <td>{{ product[1] }}</td> <!-- Price -->
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>       
+              
+                  
+                      <div style="display: flex;flex-direction: row;justify-content: space-between;">
+                        <div style="display: flex;flex-direction: row;gap: 10px;"><div style="font-size: larger;font-weight: bold;">Total : </div>
+                        <div style="font-size: larger;font-weight: bold; color:#ffb703;">
+                                 ₹{{ cart_total }}
+                        </div>
+                      </div>
+                      
+                        
+                          <button type="submit" class="btn btn-warning">Place Order</button>
+                        
+                      </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      </form>
+        
+      <script>
+        function togglePaymentFields() {
+          var paymentMethod = document.getElementById('paymentMethod').value;
+          var cardDetails = document.getElementById('cardDetails');
+          var upiDetails = document.getElementById('upiDetails');
+      
+          // Hide all fields initially
+          cardDetails.style.display = 'none';
+          upiDetails.style.display = 'none';
+      
+          // Show relevant fields based on the selected payment method
+          if (paymentMethod === 'card') {
+            cardDetails.style.display = 'block';
+          } else if (paymentMethod === 'upi') {
+            upiDetails.style.display = 'block';
+          }
+        }
+      </script>
+
+    {% endblock %}
